@@ -22,13 +22,8 @@ def data_generate(data_path):
                         variable_data[timestamp] = {'RecordID': patient_id, 'Timestamp': timestamp}
                     variable_data[timestamp][parameter] = value
 
-                    # 'Age', 'Gender', 'Height', 'ICUType' in every line as Patient's personal info
-                    if parameter in ['Age', 'Gender', 'Height', 'ICUType']:
-                        for ts in variable_data:
-                            variable_data[ts][parameter] = value
-
             variable_data = pd.DataFrame(list(variable_data.values()))
-            # df = df.groupby(['patientID','RecordTime'], dropna=True, as index = False) .mean()
+            # df = df.groupby(['patientID','RecordTime'], dropna=True, as index = False).mean()
 
             dataframes.append(variable_data)
     combined_data = pd.concat(dataframes, ignore_index=True)
@@ -50,23 +45,25 @@ def data_generate(data_path):
         mask = data['RecordID'] == record_id
         data.loc[mask, ['Age', 'Gender', 'Height', 'ICUType']] = age, gender, height, icu_type
 
+    data['RecordID'] = data['RecordID'].astype(str)
     return data
 
 
 def merge_with_outcomes(feat_df, outcome_df):
     data = feat_df
-
     # merge the features and labels
     labels_data = outcome_df
 
     data_with_labels = pd.merge(data, labels_data, on='RecordID', how='left')
 
     # insert labels into original datasets
-    insert_index = 2 
-    for col in labels_data.columns[1:]:  
+    insert_index = 2
+    prediction_targets = labels_data.columns[1:]
+    for col in prediction_targets:
         data.insert(insert_index, col, data_with_labels[col])
 
     # adjust the names of some columns
+    data = data.rename(columns={'RecordID': 'PatientID'})
     data = data.rename(columns={'In-hospital_death': 'Outcome'})
     data = data.rename(columns={'Length_of_stay': 'LOS'})
     data = data.rename(columns={'Gender': 'Sex'})
@@ -77,8 +74,10 @@ def merge_with_outcomes(feat_df, outcome_df):
 def main():
     feat_df = data_generate(data_path='./raw/set-b')
     outcome_df = pd.read_csv('./raw/Outcomes-b.txt')
+    outcome_df['RecordID'] = outcome_df['RecordID'].astype(str)
     all_df = merge_with_outcomes(feat_df, outcome_df)
     all_df.to_csv('./processed/challenge2012_setb.csv', index=False)
+
 
 if __name__ == '__main__':
     main()
