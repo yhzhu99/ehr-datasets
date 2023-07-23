@@ -4,12 +4,8 @@ sepsis/training_setA/
 sepsis/training_setB/
 sepsis/training_dataA.csv
 sepsis/training_dataB.csv
-challenge2012/dataset-a/set-a/
-challenge2012/dataset-a/*.txt
-challenge2012/dataset-a/*.csv
-challenge2012/dataset-b/set-b/
-challenge2012/dataset-b/*.txt
-challenge2012/dataset-b/*.csv
+challenge2012/raw/
+challenge2012/processed/
 #####################
 
 

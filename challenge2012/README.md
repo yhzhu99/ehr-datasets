@@ -27,32 +27,28 @@ source : https://github.com/alistairewj/challenge2012/tree/master
 1. Change the directory.
 
    ```
-   cd Challenge/
+   cd challenge2012/
    ```
 
 2. Download raw data from https://physionet.org/content/challenge-2012/1.0.0/
 
-3. Create two folders `./dataset-a/`  and `./dataset-b/ `for datasets *a* and *b* . 
+3. Create two folders `./raw`  and `./processed `. 
 
    ```
-   mkdir dataset-a
-   mkdir dataset-b
+   mkdir raw
+   mkdir processed
    ```
 
-4. Put the downloaded data folder `set-a` and file `Outcomes-a.txt` to the `./dataset-a/` . The same operation to dataset b.
+4. Put the downloaded and unzipped data folder `set-{a|b}` and file `Outcomes-{a|b}.txt` to the `./raw` folder.
 
-5. Change the directory into `./dataset-x`, and generate the formatted datasets as `challenge_dataset_formatted_x.csv` in the current directory `./dataset-x`. x is a or b.
+5. Run corresponding preprocessing script (`preprocess_seta.py`, `preprocess_setb.py`) for set A or set B. The processed CSV dataset will be generated in `processed/` folder with name `challenge2012_seta.csv` or `challenge2012_setb.csv`
 
    ```
-   cd dataset-a
-   python data_process_a.py
+   python preprocess_seta.py
+   python preprocess_setb.py
    ```
 
-   
-
-**Dataset A is the official *training dataset* and set-B is a *test set*** mentioned in the Challenge website. We just need the `./dataset-a` in our training.
-
-
+**Set A is the official *training dataset* and Set B is the *test set*** mentioned in the Challenge 2012 website. We can only use set A to do various prediction tasks
 
 ## Formatted CSV File Description
 
@@ -78,7 +74,7 @@ source : https://github.com/alistairewj/challenge2012/tree/master
 | ICUType             | 11      | 1: Coronary Care Unit, 2: Cardiac Surgery Recovery Unit, 3: Medical ICU, or 4: Surgical ICU |
 | Weight              | 12      | kg, **may change in the following time like time series variables** |
 
-| Time Series Variables                                        | Descriptions ( 36 columns totally)                      |
+| Time Series Variables                                        | Descriptions (36 variables)                      |
 | ------------------------------------------------------------ | ------------------------------------------------------- |
 | [*Albumin*](http://en.wikipedia.org/wiki/Human_serum_albumin) | g/dL                                                    |
 | [*ALP*](http://en.wikipedia.org/wiki/Alkaline_phosphatase)   | Alkaline phosphatase (IU/L)                             |

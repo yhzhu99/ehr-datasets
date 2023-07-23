@@ -1,13 +1,13 @@
 import pandas as pd
 import os
 
-def data_generate(origin_data_file_path):
-    combined_data = pd.DataFrame()
-    time_series_folder = origin_data_file_path
+def data_generate(data_path):
+    dataframes  = []
 
-    for filename in os.listdir(time_series_folder):
+    for filename in os.listdir(data_path):
+        print("[Processing file:]", filename)
         if filename.endswith(".txt"):
-            filepath = os.path.join(time_series_folder, filename)
+            filepath = os.path.join(data_path, filename)
             # extract patient ID from files' names
             patient_id = int(filename[:-4])  
 
@@ -30,38 +30,34 @@ def data_generate(origin_data_file_path):
             variable_data = pd.DataFrame(list(variable_data.values()))
             # df = df.groupby(['patientID','RecordTime'], dropna=True, as index = False) .mean()
 
-            combined_data = combined_data.append(variable_data, ignore_index=True)
+            dataframes.append(variable_data)
+    combined_data = pd.concat(dataframes, ignore_index=True)
 
     # adjust the order of columns
     columns_order = ['RecordID', 'Timestamp', 'Age', 'Gender', 'Height', 'ICUType', 'Weight'] + sorted([col for col in combined_data.columns if col not in ['RecordID', 'Timestamp', 'Age', 'Gender', 'Height', 'ICUType', 'Weight']])
-    combined_data = combined_data[columns_order]
-
-    combined_data.to_csv('converted_data.csv', index=False)
-
-
-    data = pd.read_csv('converted_data.csv')
+    data = combined_data[columns_order]
 
     patient_info_dict = {}
-
     for index, row in data.iterrows():
+        print("[Current row:]", row)
         record_id = row['RecordID']
         age, gender, height, icu_type = row['Age'], row['Gender'], row['Height'], row['ICUType']
         if record_id not in patient_info_dict:
             patient_info_dict[record_id] = (age, gender, height, icu_type)
 
     for record_id, (age, gender, height, icu_type) in patient_info_dict.items():
+        print("[Current RecordID:]", record_id)
         mask = data['RecordID'] == record_id
         data.loc[mask, ['Age', 'Gender', 'Height', 'ICUType']] = age, gender, height, icu_type
 
-    data.to_csv('updated_dataset.csv', index=False)
+    return data
 
 
-def merge_with_outcomes(outcome_file_path):
-    data = pd.read_csv('updated_dataset.csv')
+def merge_with_outcomes(feat_df, outcome_df):
+    data = feat_df
 
-    # merge the datasets and labels
-    labels_file = outcome_file_path
-    labels_data = pd.read_csv(labels_file)
+    # merge the features and labels
+    labels_data = outcome_df
 
     data_with_labels = pd.merge(data, labels_data, on='RecordID', how='left')
 
@@ -75,19 +71,14 @@ def merge_with_outcomes(outcome_file_path):
     data = data.rename(columns={'Length_of_stay': 'LOS'})
     data = data.rename(columns={'Gender': 'Sex'})
 
-
-    data.to_csv('challenge_dataset_formatted_b.csv', index=False)
+    return data
     
 
 def main():
-    origin_data_file_path = 'set-b'
-    outcome_file_path = 'Outcomes-b.txt'
-
-    data_generate(origin_data_file_path)
-    merge_with_outcomes(outcome_file_path)
-
-    os.remove('converted_data.csv')
-    os.remove('updated_dataset.csv')
+    feat_df = data_generate(data_path='./raw/set-b')
+    outcome_df = pd.read_csv('./raw/Outcomes-b.txt')
+    all_df = merge_with_outcomes(feat_df, outcome_df)
+    all_df.to_csv('./processed/challenge2012_setb.csv')
 
 if __name__ == '__main__':
     main()
