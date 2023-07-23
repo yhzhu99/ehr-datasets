@@ -78,7 +78,7 @@ def main():
     feat_df = data_generate(data_path='./raw/set-a')
     outcome_df = pd.read_csv('./raw/Outcomes-a.txt')
     all_df = merge_with_outcomes(feat_df, outcome_df)
-    all_df.to_csv('./processed/challenge2012_seta.csv')
+    all_df.to_csv('./processed/challenge2012_seta.csv', index=False)
 
 if __name__ == '__main__':
     main()
