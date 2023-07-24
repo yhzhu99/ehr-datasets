@@ -25,7 +25,7 @@ Source:	https://physionet.org/content/challenge-2019/1.0.0/
 
 | ***`Task`***                  | ***`Description`***                                          |
 | ----------------------------- | ------------------------------------------------------------ |
-| **Sepsis Prediction**         | Predict  a patient's risk of sepsis  for every time interval. |
+| **Sepsis Prediction**         | Predict a patient's risk of sepsis for every time interval. |
 | **Length of Stay Prediction** | Predict remaining hours spent in ICU at each hour of stay.   |
 
 ### Columns in each training data file
@@ -91,14 +91,22 @@ Source:	https://physionet.org/content/challenge-2019/1.0.0/
    ```
    cd sepsis/
    ```
+
 2. Download raw data from https://physionet.org/content/challenge-2019/1.0.0/
-3. The downloaded folder `Ssepsis/training_setA` and `Sepsis/training_setB` both have patient files like `pxxxxxx.psv`. The xxxxxx is the ID of a patient.
-4. run `preprocess.py` and generate the formatted datasets as `training_dataA.csv` and `training_dataB.csv` in the current directory `./sepsis` 
+
+3. Create two folders `./raw`  and `./processed `. 
 
    ```
-   python preprocess.py
+   mkdir raw
+   mkdir processed
    ```
 
-   
+4. Put the downloaded folder `sepsis/challenge-2019/1.0.0/training/training_set{A|B}` to the `./raw` folder. Both set A and set B have patient files like `p${PatientID}.psv`.
 
-Dataset A and Dataset B having the same format are from two hospital systems which published by the Challenge for training. 
+5. Run `preprocess_sepsis.py`, it will generate two csv files `sepsis_seta.csv` and `sepsis_setb.csv` in `./processed` folder.
+
+   ```
+   python preprocess_sepsis.py
+   ```
+
+Set A and set B share the same data format, these two sets are from two hospital systems which published by the Challenge for training.
