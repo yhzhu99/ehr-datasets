@@ -1,9 +1,7 @@
 #####################
 *.zip
-sepsis/training_setA/
-sepsis/training_setB/
-sepsis/training_dataA.csv
-sepsis/training_dataB.csv
+sepsis/raw/
+sepsis/processed/
 challenge2012/raw/
 challenge2012/processed/
 #####################

@@ -89,7 +89,7 @@ Source:	https://physionet.org/content/challenge-2019/1.0.0/
 1. Change the directory
 
    ```
-   cd Sepsis/
+   cd sepsis/
    ```
 2. Download raw data from https://physionet.org/content/challenge-2019/1.0.0/
 3. The downloaded folder `Ssepsis/training_setA` and `Sepsis/training_setB` both have patient files like `pxxxxxx.psv`. The xxxxxx is the ID of a patient.
