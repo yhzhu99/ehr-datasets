@@ -62,6 +62,11 @@ def merge_with_outcomes(feat_df, outcome_df):
     for col in prediction_targets:
         data.insert(insert_index, col, data_with_labels[col])
 
+    data['Height'] = data['Height'].astype(float)
+    # replace -1 value in Height column with NaN in data dataframe
+    data['Height'] = data['Height'].replace(-1, float('nan'))
+    print(data['Height'])
+
     # adjust the names of some columns
     data = data.rename(columns={'RecordID': 'PatientID'})
     data = data.rename(columns={'Timestamp': 'RecordTime'})
