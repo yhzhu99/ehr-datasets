@@ -46,6 +46,8 @@ def forward_fill_pipeline(
     default_fill: pd.DataFrame,
     demographic_features: list[str],
     labtest_features: list[str],
+    target_features: list[str],
+    require_impute_features: list[str],
 ):
     grouped = df.groupby("PatientID")
 
@@ -58,13 +60,16 @@ def forward_fill_pipeline(
         patient_x = []
         patient_y = []
 
-        for f in ["Age"] + labtest_features:
+        for f in require_impute_features:
             to_fill_value = default_fill[f]
             # take median patient as the default to-fill missing value
             fill_missing_value(sorted_group[f].values, to_fill_value)
 
         for _, v in sorted_group.iterrows():
-            patient_y.append([v["Outcome"], v["LOS"]])
+            target_values = []
+            for f in target_features:
+                target_values.append(v[f])
+            patient_y.append(target_values)
             x = []
             for f in demographic_features + labtest_features:
                 x.append(v[f])
@@ -116,10 +121,10 @@ def normalize_dataframe(train_df, val_df, test_df, normalize_features):
 
 
     # Z-score normalize the train, val, and test sets with train_mean and train_std
-    train_df[normalize_features] = (train_df[normalize_features] - train_mean) / (train_std+1e-12)
-    val_df[normalize_features] = (val_df[normalize_features] - train_mean) / (train_std+1e-12)
-    test_df[normalize_features] = (test_df[normalize_features] - train_mean) / (train_std+1e-12)
-        
+    train_df.loc[:, normalize_features] = (train_df.loc[:, normalize_features] - train_mean) / (train_std+1e-12)
+    val_df.loc[:, normalize_features] = (val_df.loc[:, normalize_features] - train_mean) / (train_std+1e-12)
+    test_df.loc[:, normalize_features] = (test_df.loc[:, normalize_features] - train_mean) / (train_std+1e-12)
+
     train_df.loc[:, normalize_features] = train_df.loc[:, normalize_features].applymap(filter_outlier)
     val_df.loc[:, normalize_features] = val_df.loc[:, normalize_features].applymap(filter_outlier)
     test_df.loc[:, normalize_features] = test_df.loc[:, normalize_features].applymap(filter_outlier)
