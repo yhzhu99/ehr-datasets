@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-def data_generate(data_path):
+def generate_df(data_path):
     dataframes  = []
 
     for filename in os.listdir(data_path):
@@ -72,7 +72,7 @@ def merge_with_outcomes(feat_df, outcome_df):
     
 
 def main():
-    feat_df = data_generate(data_path='./raw/set-a')
+    feat_df = generate_df(data_path='./raw/set-a')
     outcome_df = pd.read_csv('./raw/Outcomes-a.txt')
     outcome_df['RecordID'] = outcome_df['RecordID'].astype(str)
     all_df = merge_with_outcomes(feat_df, outcome_df)
