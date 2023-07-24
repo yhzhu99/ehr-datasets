@@ -64,6 +64,7 @@ def merge_with_outcomes(feat_df, outcome_df):
 
     # adjust the names of some columns
     data = data.rename(columns={'RecordID': 'PatientID'})
+    data = data.rename(columns={'Timestamp': 'RecordTime'})
     data = data.rename(columns={'In-hospital_death': 'Outcome'})
     data = data.rename(columns={'Length_of_stay': 'LOS'})
     data = data.rename(columns={'Gender': 'Sex'})
