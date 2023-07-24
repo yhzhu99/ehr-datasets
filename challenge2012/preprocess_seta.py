@@ -74,6 +74,9 @@ def merge_with_outcomes(feat_df, outcome_df):
     data = data.rename(columns={'Length_of_stay': 'LOS'})
     data = data.rename(columns={'Gender': 'Sex'})
 
+    # fill the static demographic features for each patient's records
+    data[['Sex', 'Age', 'ICUType']] = data.groupby(['PatientID'])[['Sex', 'Age', 'ICUType']].ffill()
+
     return data
     
 
