@@ -81,11 +81,12 @@ def merge_with_outcomes(feat_df, outcome_df):
     
 
 def main():
-    feat_df = generate_df(data_path='./raw/set-b')
-    outcome_df = pd.read_csv('./raw/Outcomes-b.txt')
+    set_type = 'a' # 'a' or 'b'
+    feat_df = generate_df(data_path=f'./raw/set-{set_type}')
+    outcome_df = pd.read_csv(f'./raw/Outcomes-{set_type}.txt')
     outcome_df['RecordID'] = outcome_df['RecordID'].astype(str)
     all_df = merge_with_outcomes(feat_df, outcome_df)
-    all_df.to_csv('./processed/challenge2012_setb.csv', index=False)
+    all_df.to_csv(f'./processed/challenge2012_set{set_type}.csv', index=False)
 
 
 if __name__ == '__main__':
