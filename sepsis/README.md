@@ -26,15 +26,15 @@ Source:	https://physionet.org/content/challenge-2019/1.0.0/
 | ***`Task`***                  | ***`Description`***                                          |
 | ----------------------------- | ------------------------------------------------------------ |
 | **Sepsis Prediction**         | Predict a patient's risk of sepsis for every time interval. |
-| **Length of Stay Prediction** | Predict remaining hours spent in ICU at each hour of stay.   |
+| **Length of Stay Prediction**        | Predict remaining days spent in ICU at each hour of stay.    |
 
 ### Columns in each training data file
 
 | ID and Label             | (columns 1-3)                                                |
 | ------------------------ | ------------------------------------------------------------ |
-| Patient ID               |                                                              |
+| PatientID               |                                                              |
 | **Outcome(SepsisLabel)** | For sepsis patients, `SepsisLabel` is 1 if $t≥t_{sepsis}−6$ , and 0 if $t<t_{sepsis}−6$. For non-sepsis patients, `SepsisLabel` is 0. |
-| **ICULOS(hours)**        | ICU length-of-stay (hours since ICU admit)                   |
+| **LOS**       | remaining days spent in ICU |
 
 | Demographics | (columns 4-8)                                 |
 | ------------ | --------------------------------------------- |
@@ -43,6 +43,7 @@ Source:	https://physionet.org/content/challenge-2019/1.0.0/
 | HospAdmTime  | Hours between hospital admit and ICU admit    |
 | Unit1        | Administrative identifier for ICU unit (MICU) |
 | Unit2        | Administrative identifier for ICU unit (SICU) |
+| ICULOS       | ICU length-of-stay (**hours since ICU admit**)|
 
 | Vital signs | col (9-16)                            |
 | ----------- | ------------------------------------- |
