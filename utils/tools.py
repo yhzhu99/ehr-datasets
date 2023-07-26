@@ -61,7 +61,11 @@ def forward_fill_pipeline(
         patient_y = []
 
         for f in require_impute_features:
-            to_fill_value = default_fill[f]
+            # if the f is not in the default_fill, then default to -1
+            if f not in default_fill: # these are normally categorical features
+                to_fill_value = -1
+            else:
+                to_fill_value = default_fill[f]
             # take median patient as the default to-fill missing value
             fill_missing_value(sorted_group[f].values, to_fill_value)
 
