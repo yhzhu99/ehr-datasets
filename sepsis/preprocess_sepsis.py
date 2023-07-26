@@ -5,10 +5,7 @@ import os
 def generate_df(data_path):
     dataframes  = []
 
-    cnt = 0
     for filename in os.listdir(data_path):
-        cnt += 1
-        if cnt == 10: break
         print("[Processing file:]", filename)
         if filename.endswith(".psv"):
             filepath = os.path.join(data_path, filename)
