@@ -51,14 +51,23 @@ The code is based on repository [eICU_Benchmark](https://github.com/mostafaalish
 |**RecordTime**|`itemoffset` in raw CSVs.Relative time of the record since admit. (hours since admit)|
 |**AdmissionTime**|Set all admisstion time as zero.|
 |**DischargeTime**|`unitdischargeoffset` in raw CSVs.|
+
 |***`Prediction Label`***|***`(columns 4-31)`***|
-|**Outcome**|In-hospital Mortality. '1' represents the patient's death within the hospital.|
+|:---------------------|:-----------------|
+|**Outcome**|In-hospital Mortality (binary classification). '1' represents the patient's death within the hospital.|
 |**LOS**|Length of Stay. (days since admit)|
-|**Decompensation**|Decompensation prediction. We define the task as mortality prediction in the next 24 hours at each hour of an ICU stay. '1' represents the patient's death.|
-|**Phenotype**|Phenotype Classification.|
+|**Decompensation**|Decompensation prediction (binary classification). We define the task as mortality prediction in the next 24 hours at each hour of an ICU stay. '1' represents the patient's death.|
+|**Phenotype**|Phenotype Classification, multi-label classification task. `['Respiratory failure', 'Essential hypertension', 'Cardiac dysrhythmias', 'Fluid disorders', 'Septicemia', 'Acute and unspecified renal failure', 'Pneumonia', 'Acute cerebrovascular disease', 'CHF', 'CKD', 'COPD', 'Acute myocardial infarction', 'Gastrointestinal hem', 'Shock', 'lipid disorder', 'DM with complications', 'Coronary athe', 'Pleurisy', 'Other liver diseases', 'lower respiratory', 'Hypertension with complications', 'Conduction disorders', 'Complications of surgical', 'upper respiratory', 'DM without complication']`|
+
 |***`Demographics`***|***`(columns 32-33)`***|
+|:---------------------|:-----------------|
 |**Sex**|Female (0) or Male (1)|
-|**Age**|Age of Patiens.|
-|***`Laboratory Features`***|***`(columns 34-49)`***|
-|**Categorical**|(cols 34-37)<br>["GCS Total",<br>&nbsp;"Eyes",<br>&nbsp;"Motor",<br>&nbsp;"Verbal"]|
-|**Numerical**|(cols 38-49)<br>["admissionheight",<br>&nbsp;"admissionweight",<br>&nbsp;"Heart Rate",<br>&nbsp;"MAP (mmHg)",<br>&nbsp;"Invasive BP Diastolic",<br>&nbsp;"Invasive BP Systolic",<br>&nbsp;"O2 Saturation",<br>&nbsp;"Respiratory Rate",<br>&nbsp;"Temperature (C)",<br>&nbsp;"glucose",<br>&nbsp;"FiO2",<br>&nbsp;"pH"]|
+|**Age**|Age of Patients.|
+
+|***`Lab tests`***|***`(columns 34-49)`***|
+|:---------------------|:-----------------|
+|**Categorical**|`["GCS Total", "Eyes", "Motor", "Verbal"]`|
+|**Numerical**|`["admissionheight", "admissionweight", "Heart Rate", "MAP (mmHg)", "Invasive BP Diastolic", "Invasive BP Systolic", "O2 Saturation", "Respiratory Rate", "Temperature (C)", "glucose", "FiO2", "pH"]`|
+
+
+
