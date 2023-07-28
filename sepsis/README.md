@@ -104,10 +104,12 @@ Source:	https://physionet.org/content/challenge-2019/1.0.0/
 
 4. Put the downloaded folder `sepsis/challenge-2019/1.0.0/training/training_set{A|B}` to the `./raw` folder. Both set A and set B have patient files like `p${PatientID}.psv`.
 
-5. Run `preprocess_sepsis.py`, it will generate two csv files `sepsis_seta.csv` and `sepsis_setb.csv` in `./processed` folder.
+5. Run `format_sepsis.py`, it will generate two csv files `sepsis_seta.csv` and `sepsis_setb.csv` in `./processed` folder.
 
    ```
-   python preprocess_sepsis.py
+   python format_sepsis.py
    ```
+
+6. Apply normalization, imputation, outlier filtering, dataset splitting (7-1-2, train/val/test) process, and export the final dataset to `./processed` folder. Run `preprocess.ipynb`
 
 Set A and set B share the same data format, these two sets are from two hospital systems which published by the Challenge for training.

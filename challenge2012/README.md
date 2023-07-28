@@ -41,11 +41,13 @@ source : https://github.com/alistairewj/challenge2012/tree/master
 
 4. Put the downloaded and unzipped data folder `set-{a|b}` and file `Outcomes-{a|b}.txt` to the `./raw` folder.
 
-5. Run preprocessing script `preprocess_challange.py` for set A or set B (choose which type in `main()` function). The processed CSV dataset will be generated in `processed/` folder with name `challenge2012_seta.csv` or `challenge2012_setb.csv`
+5. Run preprocessing script `format_challange.py` for set A or set B (choose which type in `main()` function). The processed CSV dataset will be generated in `processed/` folder with name `challenge2012_seta.csv` or `challenge2012_setb.csv`
 
    ```
-   python preprocess_challenge.py
+   python format_challenge.py
    ```
+
+6. Apply normalization, imputation, outlier filtering, dataset splitting (7-1-2, train/val/test) process, and export the final dataset to `./processed` folder. Run `preprocess.ipynb`
 
 **Set A is the official *training dataset* and Set B is the *test set*** mentioned in the Challenge 2012 website. We can only use set A to do various prediction tasks
 
