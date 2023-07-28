@@ -23,25 +23,48 @@ The code is based on repository [eICU_Benchmark](https://github.com/mostafaalish
 |:----|:-----------|
 |**In-hospital Mortality Prediction**|Predict in-hospital mortality based on the first 48 hours since admit.|
 |**Length of Stay Prediction**|Predict remaining time spent in ICU at each hour of stay.|
-|**Decompensation prediction**|Predict whether the patient's health will rapidly deteriorate in the next 24 hours.|
+|**Decompensation prediction**|Predict whether the patient's health will rapidly deteriorate in the next 48 hours.|
 |**Phenotype Classification**|Classify whether a condition (ICD-9 code) is present in a particular ICU stay record.|
+
+Currently, we support the mortality outcome prediction task and length of stay prediction task. In our preprocessing script (`preprocess.ipynb`), We filter out the patients who have less than 48 hours ICU stay. 
 
 ## Building the Benchmark
 
 ### eICU Preprocessing
 
-1. Change the directory.
+0. Decompress the CSV files with following bash script, you can name it `decompress.sh`.
 
-       cd eICU/
+    ```bash
+    #!/bin/bash
+
+    source_directory=$1
+    destination_directory=$2
+
+    find "$source_directory" -name "*.csv.gz" -exec sh -c 'gunzip -c {} > "$0/$(basename {} .gz)"' "$destination_directory" \;
+    ```
+
+    Execute the script: `./decompress.sh ./2.0 ./decompressed` (`mkdir decompressed` first).
+
+1. Change the directory and create directory to save processed files.
+
+    ```bash
+    cd eICU/
+    mkdir processed
+    ```
 
 2. The following command generates one directory per each patient and writes patients demographics into `pats.csv`, the items extracted from Nursecharting into `nc.csv` and the lab items into `lab.csv` and then converts these three csv files into one `timeseries.csv` for each patient. you will have one csv file `all_data.csv` with all the patients data in a time-series manner for all the four tasks.
 
-       python -m data_extraction.data_extraction_root {PATH TO eICU CSVs} data/root/
+    ```bash
+    python -m data_extraction.data_extraction_root {PATH_TO_eICU_CSVs} processed/
+    # For example, the decompressed datasets are saved in `/data/datasets/eicu-crd/decompressed/`,
+    # Execute with `python -m data_extraction.data_extraction_root /data/datasets/eicu-crd/decompressed  processed/
+    ```
 
 3. The following commands will generate formatted EHR csv file, which contains basic information of patiens, lables of prediction tasks and time series data. It will be stored in `data/processed/ehr/eICU_dataset_formatted.csv`.
 
-       python -m preprocess_eICU {PATH TO eICU CSVs} data/root/ data/processed/
-
+    ```bash
+    python -m format_eICU {PATH_TO_eICU_CSVs} processed/
+    ```
 
 ## Formatted CSV File Description
 

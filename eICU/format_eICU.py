@@ -91,14 +91,10 @@ def main():
     parser = argparse.ArgumentParser(description="Create data for root")
     parser.add_argument('eicu_dir', type=str, help="Path to root folder containing all the patietns data")
     parser.add_argument('root_path', type=str, help="Path to root folder containing all_data.csv.")
-    parser.add_argument('output_path', type=str, help="Directory where the processed data should be stored.")
     args, _ = parser.parse_known_args()
-
-    if not os.path.exists(args.output_path):
-        os.mkdir(args.output_path)
     
     data = extract_to_csv(args)
-    data.to_csv(os.path.join(args.output_path, 'eICU_dataset_formatted.csv'), index=False)
+    data.to_csv(os.path.join(args.root_path, 'eICU_dataset_formatted.csv'), index=False)
 
 
 if __name__ == '__main__':
