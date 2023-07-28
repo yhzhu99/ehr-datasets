@@ -1,4 +1,6 @@
 #####################
+debug.py
+debug.ipynb
 *.zip
 sepsis/raw/
 sepsis/processed/

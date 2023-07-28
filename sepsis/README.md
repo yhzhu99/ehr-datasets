@@ -95,7 +95,7 @@ Source:	https://physionet.org/content/challenge-2019/1.0.0/
 
 2. Download raw data from https://physionet.org/content/challenge-2019/1.0.0/
 
-3. Create two folders `./raw`  and `./processed `. 
+3. Create two folders `./raw`  and `./processed`. 
 
    ```
    mkdir raw
