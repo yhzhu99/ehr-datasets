@@ -87,7 +87,7 @@ Currently, we support the mortality outcome prediction task and length of stay p
 |**Sex**|Female (0) or Male (1)|
 |**Age**|Age of Patients.|
 
-|***`Lab tests`***|***`(columns 34-49)`***|
+|***`Lab tests`***|***`(columns 34-78)`***|
 |:---------------------|:-----------------|
 |**Categorical**|`["GCS Total", "Eyes", "Motor", "Verbal"]`|
 |**Numerical**|`["admissionheight", "admissionweight", "Heart Rate", "MAP (mmHg)", "Invasive BP Diastolic", "Invasive BP Systolic", "O2 Saturation", "Respiratory Rate", "Temperature (C)", "glucose", "FiO2", "pH"]`|

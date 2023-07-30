@@ -61,7 +61,7 @@ Here are the required steps to build the benchmark. It assumes that you already 
 
        python -m scripts.extract_notes {PATH TO MIMIC-III CSVs} data/root/
 
-2. The following commands will generate formatted notes csv file, which contains basic information of patiens and notes in first 48 hours of an ICU stay. It will be stored in `data/processed/ehr/mimic4_notes_dataset_formatted.csv`.
+2. The following commands will generate formatted notes csv file, which contains basic information of patiens and notes in first 48 hours of an ICU stay. It will be stored in `data/processed/ehr/format_mimic3_notes.csv`.
 
        python -m preprocess_notes data/root/ data/processed/notes/
 
@@ -89,5 +89,5 @@ Here are the required steps to build the benchmark. It assumes that you already 
 
 |***`Laboratory Features`***|***`(columns 34-92)`***|
 |:---------------------|:-----------------|
-|**Categorical**|["Capillary refill rate" (cols 34-35),<br>&nbsp;"Glascow coma scale eye opening" (cols 36-43),<br>&nbsp;"Glascow coma scale motor response" (cols 44-55),<br>&nbsp;"Glascow coma scale total" (cols 56-68),<br>&nbsp;"Glascow coma scale verbal response" (cols 69-80)]|
-|**Numerical**|(cols 81-92)<br>["Diastolic blood pressure",<br>&nbsp;"Fraction inspired oxygen",<br>&nbsp;"Glucose",<br>&nbsp;"Heart Rate",<br>&nbsp;"Height",<br>&nbsp;"Mean blood pressure",<br>&nbsp;"Oxygen saturation",<br>&nbsp;"Respiratory rate",<br>&nbsp;"Systolic blood pressure",<br>&nbsp;"Temperature",<br>&nbsp;"Weight",<br>&nbsp;"pH"]|
+|**Categorical**|`["Capillary refill rate", "Glascow coma scale eye opening", "Glascow coma scale motor response", "Glascow coma scale total", "Glascow coma scale verbal response"]`|
+|**Numerical**|`["Diastolic blood pressure", "Fraction inspired oxygen", "Glucose", "Heart Rate", "Height", "Mean blood pressure", "Oxygen saturation", "Respiratory rate", "Systolic blood pressure", "Temperature", "Weight", "pH"]`|

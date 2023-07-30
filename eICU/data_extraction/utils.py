@@ -772,7 +772,7 @@ def read_diagnosis_table(eicu_path):
 
 def diag_labels(diag):
     import json
-    codes = json.load(open('phen_code.json'))
+    codes = json.load(open('resources/phen_code.json'))
     diag.loc[diag['icd'].isin(codes['septicemia']), 'Septicemia'] = 1
     diag.loc[diag['icd'].isin(codes['Shock']), 'Shock'] = 1
     diag.loc[diag['icd'].isin(codes['Compl_surgical']), 'Complications of surgical'] = 1
@@ -890,20 +890,59 @@ def normalize_data_rlos(config, data, train_idx, test_idx):
     return (train, nrows_train), (test, nrows_test)
 
 
+def write_one_hot(df):
+    import json
+    cate_channels = json.load(open('resources/categorical.json'))
+    channels = list(cate_channels.keys())
+    cur_len = 0
+    begin_pos = [0 for i in range(len(cate_channels))]
+    end_pos = [0 for i in range(len(cate_channels))]
+    for i in range(len(cate_channels)):
+        begin_pos[i] = cur_len
+        end_pos[i] = begin_pos[i] + len(cate_channels[channels[i]])
+        cur_len = end_pos[i]
+
+
+    data = np.full([df.shape[0], cur_len], np.nan)
+
+    for i in range(df.shape[0]):
+        row = df.iloc[i, :]
+        for j in range(len(channels)):
+            channel = channels[j]
+            if np.isnan(row[channel]):
+                continue
+            n_values = len(cate_channels[channel])
+            one_hot = np.zeros((n_values,))
+            category_id = cate_channels[channel].index(int(row[channel]))
+            one_hot[category_id] = 1
+            for pos in range(n_values):
+                data[i, begin_pos[j] + pos] = one_hot[pos]
+
+    new_header = []
+    for channel in channels:
+        values = cate_channels[channel]
+        for value in values:
+            new_header.append(channel + "->" + str(value))
+
+    cate_df = pd.DataFrame(data, columns=new_header)
+
+    return cate_df, new_header
+
+
 # Remaining Mortality & Length of Stay
 def filter_out_data(all_df):
-    mort_los_cols = ['patientunitstayid', 'itemoffset', 'unitdischargeoffset',
-                     'hospitaldischargestatus', 'RLOS', 'unitdischargestatus',
-                     'gender', 'age',
-                     'GCS Total', 'Eyes', 'Motor', 'Verbal',
-                     'admissionheight', 'admissionweight', 'Heart Rate', 'MAP (mmHg)',
-                     'Invasive BP Diastolic', 'Invasive BP Systolic', 'O2 Saturation',
-                     'Respiratory Rate', 'Temperature (C)', 'glucose', 'FiO2', 'pH'
-                     ]
+    basic_cols = ['patientunitstayid', 'itemoffset', 'unitdischargeoffset',
+                  'hospitaldischargestatus', 'RLOS', 'unitdischargestatus',
+                  'gender', 'age']
+    cate_cols = ['GCS Total', 'Eyes', 'Motor', 'Verbal']
+    num_cols = ['admissionheight', 'admissionweight', 'Heart Rate', 'MAP (mmHg)',
+                'Invasive BP Diastolic', 'Invasive BP Systolic', 'O2 Saturation',
+                'Respiratory Rate', 'Temperature (C)', 'glucose', 'FiO2', 'pH'
+                ]
 
     # import pdb;pdb.set_trace()
 
-    # all_df = all_df[all_df.gender != 0]
+    all_df = all_df[all_df.gender != 2]
     all_df = all_df[all_df.hospitaldischargestatus!=2]
     all_df['RLOS'] = np.nan
     all_df['unitdischargeoffset'] = all_df['unitdischargeoffset'] / (1440)
@@ -912,7 +951,10 @@ def filter_out_data(all_df):
     all_df['RLOS'] = (all_df['unitdischargeoffset'] - all_df['itemoffsetday'])
     all_df.drop(columns='itemoffsetday', inplace=True)
     
-    all_out = all_df[mort_los_cols]
+    basic_df = all_df[basic_cols]
+    num_df = all_df[num_cols]
+    cate_df, _ = write_one_hot(all_df[cate_cols])
+    all_out = pd.concat([basic_df, cate_df, num_df], axis=1)
     all_out = all_out[all_out['itemoffset'] > 0]
     all_out = all_out[(all_out['unitdischargeoffset'] > 0) & (all_out['RLOS'] > 0)]
     # all_los = all_los.round({'RLOS': 2})
