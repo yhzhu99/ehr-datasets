@@ -36,7 +36,7 @@ def cohort_stay_id(patients):
 
 
 # Convert gender from F/M to numbers
-g_map = {'Female': 1, 'Male': 2, '': 0, 'NaN': 0, 'Unknown': 0, 'Other': 0}
+g_map = {'Female': 0, 'Male': 1, '': 2, 'NaN': 2, 'Unknown': 2, 'Other': 2}
 def transform_gender(gender_series):
     global g_map
     return {'gender': gender_series.fillna('').apply(lambda s: g_map[s] if s in g_map else g_map[''])}
@@ -438,15 +438,15 @@ def all_df_into_one_df(output_path):
 # Convert categorical variables into number from 0 to 429
 def prepare_categorical_variables(root_dir):
     columns_ord = [ 'patientunitstayid', 'itemoffset',
-    'Eyes', 'Motor', 'GCS Total', 'Verbal',
-    'ethnicity', 'gender','apacheadmissiondx',
-    'FiO2','Heart Rate', 'Invasive BP Diastolic',
-    'Invasive BP Systolic', 'MAP (mmHg)',  'O2 Saturation',
-    'Respiratory Rate', 'Temperature (C)', 'admissionheight',
-    'admissionweight', 'age', 'glucose', 'pH',
-    'hospitaladmitoffset', 
-    'hospitaldischargestatus','unitdischargeoffset',
-    'unitdischargestatus']
+                    'Eyes', 'Motor', 'GCS Total', 'Verbal',
+                    'ethnicity', 'gender', 'apacheadmissiondx',
+                    'FiO2', 'Heart Rate', 'Invasive BP Diastolic',
+                    'Invasive BP Systolic', 'MAP (mmHg)',  'O2 Saturation',
+                    'Respiratory Rate', 'Temperature (C)', 'admissionheight',
+                    'admissionweight', 'age', 'glucose', 'pH',
+                    'hospitaladmitoffset',
+                    'hospitaldischargestatus', 'unitdischargeoffset',
+                    'unitdischargestatus']
     all_df = pd.read_csv(os.path.join(root_dir, 'all_data.csv'))
   
     all_df = all_df[all_df.gender != 0] #unknown gender is dropped
@@ -460,29 +460,44 @@ def prepare_categorical_variables(root_dir):
     # all_df['Eyes'] = all_df['Eyes'].astype(int)
     # all_df['Motor'] = all_df['Motor'].astype(int)
     # all_df['Verbal'] = all_df['Verbal'].astype(int)
+    # all_df.apacheadmissiondx = all_df.apacheadmissiondx + 1
+    # all_df.ethnicity = all_df.ethnicity + 1
+    # dxmax = all_df.apacheadmissiondx.max()
+    # etmax = all_df.ethnicity.max()
+    # gemax = all_df.gender.max()
+    # totmax = all_df['GCS Total'].max()
+    # eyemax = all_df['Eyes'].max()
+    # motmax = all_df['Motor'].max()
+    # vermax = all_df['Verbal'].max()
+    # all_df.ethnicity = all_df.ethnicity + dxmax
+    # all_df.gender = all_df.gender + dxmax+etmax
+    # all_df['GCS Total'] = all_df['GCS Total'] +dxmax+etmax+gemax
+    # all_df['Eyes'] = all_df['Eyes'] +dxmax+etmax+gemax+totmax
+    # all_df['Motor'] = all_df['Motor'] +dxmax+etmax+gemax+totmax+eyemax
+    # all_df['Verbal'] = all_df['Verbal'] +dxmax+etmax+gemax+totmax+eyemax+motmax
+
     all_df.apacheadmissiondx = all_df.apacheadmissiondx.astype(int)
     all_df.ethnicity = all_df.ethnicity.astype(int)
     all_df.gender = all_df.gender.astype(int)
+    index = all_df["GCS Total"][all_df["GCS Total"].notna()].index
+    value = all_df["GCS Total"][all_df["GCS Total"].notna()].values
+    all_df.loc[index, "GCS Total"] = value.astype(int)
+    index = all_df["Eyes"][all_df["Eyes"].notna()].index
+    value = all_df["Eyes"][all_df["Eyes"].notna()].values
+    all_df.loc[index, "Eyes"] = value.astype(int)
+    index = all_df["Motor"][all_df["Motor"].notna()].index
+    value = all_df["Motor"][all_df["Motor"].notna()].values
+    all_df.loc[index, "Motor"] = value.astype(int)
+    index = all_df["Verbal"][all_df["Verbal"].notna()].index
+    value = all_df["Verbal"][all_df["Verbal"].notna()].values
+    all_df.loc[index, "Verbal"] = value.astype(int)
+    all_df.ethnicity = all_df.ethnicity
+    all_df.gender = all_df.gender
     all_df['GCS Total'] = all_df['GCS Total']
     all_df['Eyes'] = all_df['Eyes']
     all_df['Motor'] = all_df['Motor']
     all_df['Verbal'] = all_df['Verbal']
-    all_df.apacheadmissiondx = all_df.apacheadmissiondx + 1
-    all_df.ethnicity = all_df.ethnicity + 1
-    dxmax = all_df.apacheadmissiondx.max()
-    etmax = all_df.ethnicity.max()
-    gemax = all_df.gender.max()
-    totmax = all_df['GCS Total'].max()
-    eyemax = all_df['Eyes'].max()
-    motmax = all_df['Motor'].max()
-    vermax = all_df['Verbal'].max()
-    all_df.ethnicity = all_df.ethnicity + dxmax
-    # all_df.gender = all_df.gender + dxmax+etmax
-    all_df.gender = all_df.gender - 1
-    all_df['GCS Total'] = all_df['GCS Total'] +dxmax+etmax+gemax
-    all_df['Eyes'] = all_df['Eyes'] +dxmax+etmax+gemax+totmax
-    all_df['Motor'] = all_df['Motor'] +dxmax+etmax+gemax+totmax+eyemax
-    all_df['Verbal'] = all_df['Verbal'] +dxmax+etmax+gemax+totmax+eyemax+motmax
+
     return all_df
 
 
