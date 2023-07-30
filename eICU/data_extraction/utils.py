@@ -36,7 +36,7 @@ def cohort_stay_id(patients):
 
 
 # Convert gender from F/M to numbers
-g_map = {'Female': 1, 'Male': 2, '': 0, 'NaN': 0, 'Unknown': 0, 'Other': 0}
+g_map = {'Female': 0, 'Male': 1, '': 2, 'NaN': 2, 'Unknown': 2, 'Other': 2}
 def transform_gender(gender_series):
     global g_map
     return {'gender': gender_series.fillna('').apply(lambda s: g_map[s] if s in g_map else g_map[''])}
@@ -437,20 +437,20 @@ def all_df_into_one_df(output_path):
 
 # Convert categorical variables into number from 0 to 429
 def prepare_categorical_variables(root_dir):
-    columns_ord = [ 'patientunitstayid', 'itemoffset',
-    'Eyes', 'Motor', 'GCS Total', 'Verbal',
-    'ethnicity', 'gender','apacheadmissiondx',
-    'FiO2','Heart Rate', 'Invasive BP Diastolic',
-    'Invasive BP Systolic', 'MAP (mmHg)',  'O2 Saturation',
-    'Respiratory Rate', 'Temperature (C)', 'admissionheight',
-    'admissionweight', 'age', 'glucose', 'pH',
-    'hospitaladmitoffset', 
-    'hospitaldischargestatus','unitdischargeoffset',
-    'unitdischargestatus']
+    columns_ord = ['patientunitstayid', 'itemoffset',
+                   'Eyes', 'Motor', 'GCS Total', 'Verbal',
+                   'ethnicity', 'gender', 'apacheadmissiondx',
+                   'FiO2', 'Heart Rate', 'Invasive BP Diastolic',
+                   'Invasive BP Systolic', 'MAP (mmHg)',  'O2 Saturation',
+                   'Respiratory Rate', 'Temperature (C)', 'admissionheight',
+                   'admissionweight', 'age', 'glucose', 'pH',
+                   'hospitaladmitoffset',
+                   'hospitaldischargestatus', 'unitdischargeoffset',
+                   'unitdischargestatus']
     all_df = pd.read_csv(os.path.join(root_dir, 'all_data.csv'))
   
-    all_df = all_df[all_df.gender != 0] #unknown gender is dropped
-    all_df = all_df[all_df.hospitaldischargestatus != 2] #unknown hospital discharge is dropped
+    all_df = all_df[all_df.gender != 2]  # unknown gender is dropped
+    all_df = all_df[all_df.hospitaldischargestatus != 2]  # unknown hospital discharge is dropped
     all_df = all_df[columns_ord]
 
     # all_df.apacheadmissiondx = all_df.apacheadmissiondx.astype(int)
@@ -460,29 +460,42 @@ def prepare_categorical_variables(root_dir):
     # all_df['Eyes'] = all_df['Eyes'].astype(int)
     # all_df['Motor'] = all_df['Motor'].astype(int)
     # all_df['Verbal'] = all_df['Verbal'].astype(int)
+    # all_df.apacheadmissiondx = all_df.apacheadmissiondx + 1
+    # all_df.ethnicity = all_df.ethnicity + 1
+    # dxmax = all_df.apacheadmissiondx.max()
+    # etmax = all_df.ethnicity.max()
+    # gemax = all_df.gender.max()
+    # totmax = all_df['GCS Total'].max()
+    # eyemax = all_df['Eyes'].max()
+    # motmax = all_df['Motor'].max()
+    # vermax = all_df['Verbal'].max()
+    # all_df.ethnicity = all_df.ethnicity + dxmax
+    # all_df.gender = all_df.gender + dxmax+etmax
+    # all_df['GCS Total'] = all_df['GCS Total'] +dxmax+etmax+gemax
+    # all_df['Eyes'] = all_df['Eyes'] +dxmax+etmax+gemax+totmax
+    # all_df['Motor'] = all_df['Motor'] +dxmax+etmax+gemax+totmax+eyemax
+    # all_df['Verbal'] = all_df['Verbal'] +dxmax+etmax+gemax+totmax+eyemax+motmax
+
     all_df.apacheadmissiondx = all_df.apacheadmissiondx.astype(int)
     all_df.ethnicity = all_df.ethnicity.astype(int)
     all_df.gender = all_df.gender.astype(int)
+    index = all_df["GCS Total"][all_df["GCS Total"].notna()].index
+    value = all_df["GCS Total"][all_df["GCS Total"].notna()].values
+    all_df.loc[index, "GCS Total"] = value.astype(int)
+    index = all_df["Eyes"][all_df["Eyes"].notna()].index
+    value = all_df["Eyes"][all_df["Eyes"].notna()].values
+    all_df.loc[index, "Eyes"] = value.astype(int)
+    index = all_df["Motor"][all_df["Motor"].notna()].index
+    value = all_df["Motor"][all_df["Motor"].notna()].values
+    all_df.loc[index, "Motor"] = value.astype(int)
+    index = all_df["Verbal"][all_df["Verbal"].notna()].index
+    value = all_df["Verbal"][all_df["Verbal"].notna()].values
+    all_df.loc[index, "Verbal"] = value.astype(int)
     all_df['GCS Total'] = all_df['GCS Total']
     all_df['Eyes'] = all_df['Eyes']
     all_df['Motor'] = all_df['Motor']
     all_df['Verbal'] = all_df['Verbal']
-    all_df.apacheadmissiondx = all_df.apacheadmissiondx + 1
-    all_df.ethnicity = all_df.ethnicity + 1
-    dxmax = all_df.apacheadmissiondx.max()
-    etmax = all_df.ethnicity.max()
-    gemax = all_df.gender.max()
-    totmax = all_df['GCS Total'].max()
-    eyemax = all_df['Eyes'].max()
-    motmax = all_df['Motor'].max()
-    vermax = all_df['Verbal'].max()
-    all_df.ethnicity = all_df.ethnicity + dxmax
-    # all_df.gender = all_df.gender + dxmax+etmax
-    all_df.gender = all_df.gender - 1
-    all_df['GCS Total'] = all_df['GCS Total'] +dxmax+etmax+gemax
-    all_df['Eyes'] = all_df['Eyes'] +dxmax+etmax+gemax+totmax
-    all_df['Motor'] = all_df['Motor'] +dxmax+etmax+gemax+totmax+eyemax
-    all_df['Verbal'] = all_df['Verbal'] +dxmax+etmax+gemax+totmax+eyemax+motmax
+
     return all_df
 
 
@@ -757,7 +770,7 @@ def read_diagnosis_table(eicu_path):
 
 def diag_labels(diag):
     import json
-    codes = json.load(open('phen_code.json'))
+    codes = json.load(open('resources/phen_code.json'))
     diag.loc[diag['icd'].isin(codes['septicemia']), 'Septicemia'] = 1
     diag.loc[diag['icd'].isin(codes['Shock']), 'Shock'] = 1
     diag.loc[diag['icd'].isin(codes['Compl_surgical']), 'Complications of surgical'] = 1
@@ -875,21 +888,60 @@ def normalize_data_rlos(config, data, train_idx, test_idx):
     return (train, nrows_train), (test, nrows_test)
 
 
+def write_one_hot(df):
+    import json
+    cate_channels = json.load(open('resources/categorical.json'))
+    channels = list(cate_channels.keys())
+    cur_len = 0
+    begin_pos = [0 for i in range(len(cate_channels))]
+    end_pos = [0 for i in range(len(cate_channels))]
+    for i in range(len(cate_channels)):
+        begin_pos[i] = cur_len
+        end_pos[i] = begin_pos[i] + len(cate_channels[channels[i]])
+        cur_len = end_pos[i]
+
+
+    data = np.full([df.shape[0], cur_len], np.nan)
+
+    for i in range(df.shape[0]):
+        row = df.iloc[i, :]
+        for j in range(len(channels)):
+            channel = channels[j]
+            if np.isnan(row[channel]):
+                continue
+            n_values = len(cate_channels[channel])
+            one_hot = np.zeros((n_values,))
+            category_id = cate_channels[channel].index(int(row[channel]))
+            one_hot[category_id] = 1
+            for pos in range(n_values):
+                data[i, begin_pos[j] + pos] = one_hot[pos]
+
+    new_header = []
+    for channel in channels:
+        values = cate_channels[channel]
+        for value in values:
+            new_header.append(channel + "->" + str(value))
+
+    cate_df = pd.DataFrame(data, columns=new_header)
+
+    return cate_df, new_header
+
+
 # Remaining Mortality & Length of Stay
 def filter_out_data(all_df):
-    mort_los_cols = ['patientunitstayid', 'itemoffset', 'unitdischargeoffset',
-                     'hospitaldischargestatus', 'RLOS', 'unitdischargestatus',
-                     'gender', 'age',
-                     'GCS Total', 'Eyes', 'Motor', 'Verbal',
-                     'admissionheight', 'admissionweight', 'Heart Rate', 'MAP (mmHg)',
-                     'Invasive BP Diastolic', 'Invasive BP Systolic', 'O2 Saturation',
-                     'Respiratory Rate', 'Temperature (C)', 'glucose', 'FiO2', 'pH'
-                     ]
+    basic_cols = ['patientunitstayid', 'itemoffset', 'unitdischargeoffset',
+                  'hospitaldischargestatus', 'RLOS', 'unitdischargestatus',
+                  'gender', 'age']
+    cate_cols = ['GCS Total', 'Eyes', 'Motor', 'Verbal']
+    num_cols = ['admissionheight', 'admissionweight', 'Heart Rate', 'MAP (mmHg)',
+                'Invasive BP Diastolic', 'Invasive BP Systolic', 'O2 Saturation',
+                'Respiratory Rate', 'Temperature (C)', 'glucose', 'FiO2', 'pH'
+                ]
 
     # import pdb;pdb.set_trace()
 
-    # all_df = all_df[all_df.gender != 0]
-    all_df = all_df[all_df.hospitaldischargestatus!=2]
+    all_df = all_df[all_df.gender != 2]
+    all_df = all_df[all_df.hospitaldischargestatus != 2]
     all_df['RLOS'] = np.nan
     all_df['unitdischargeoffset'] = all_df['unitdischargeoffset'] / (1440)
     all_df['itemoffsetday'] = (all_df['itemoffset'] / 24)
@@ -897,11 +949,14 @@ def filter_out_data(all_df):
     all_df['RLOS'] = (all_df['unitdischargeoffset'] - all_df['itemoffsetday'])
     all_df.drop(columns='itemoffsetday', inplace=True)
     
-    all_out = all_df[mort_los_cols]
+    basic_df = all_df[basic_cols]
+    num_df = all_df[num_cols]
+    cate_df, _ = write_one_hot(all_df[cate_cols])
+    all_out = pd.concat([basic_df, cate_df, num_df], axis=1)
     all_out = all_out[all_out['itemoffset'] > 0]
     all_out = all_out[(all_out['unitdischargeoffset'] > 0) & (all_out['RLOS'] > 0)]
     # all_los = all_los.round({'RLOS': 2})
-    all_out = all_out[all_df["unitdischargestatus"] != 2]
+    all_out = all_out[all_out["unitdischargestatus"] != 2]
 
     all_out = label_decompensation(all_out)
 

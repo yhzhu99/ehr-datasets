@@ -11,7 +11,7 @@ The code is based on repository [eICU_Benchmark](https://github.com/mostafaalish
 
 |***`Number of patients`***|
 |:------------------:|
-|74336|
+|73386|
 
 ### Data Modalities
 
@@ -61,7 +61,7 @@ Currently, we support the mortality outcome prediction task and length of stay p
     # Execute with `python -m data_extraction.data_extraction_root /data/datasets/eicu-crd/decompressed  processing/
     ```
 
-3. The following commands will generate formatted EHR csv file, which contains basic information of patiens, labels of prediction tasks and time series EHR data. It will be stored in `data/processed/eICU_dataset_formatted.csv`.
+3. The following commands will generate formatted EHR csv file, which contains basic information of patiens, lables of prediction tasks and time series data. It will be stored in `data/processed/ehr/format_eICU.csv`.
 
     ```bash
     python -m format_eICU {PATH_TO_eICU_CSVs} processing/ processed/
@@ -88,7 +88,7 @@ Currently, we support the mortality outcome prediction task and length of stay p
 |**Sex**|Female (0) or Male (1)|
 |**Age**|Age of Patients.|
 
-|***`Lab tests`***|***`(columns 34-49)`***|
+|***`Lab tests`***|***`(columns 34-78)`***|
 |:---------------------|:-----------------|
 |**Categorical**|`["GCS Total", "Eyes", "Motor", "Verbal"]`|
 |**Numerical**|`["admissionheight", "admissionweight", "Heart Rate", "MAP (mmHg)", "Invasive BP Diastolic", "Invasive BP Systolic", "O2 Saturation", "Respiratory Rate", "Temperature (C)", "glucose", "FiO2", "pH"]`|

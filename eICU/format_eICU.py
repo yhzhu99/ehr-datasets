@@ -95,7 +95,7 @@ def main():
     args, _ = parser.parse_known_args()
     
     data = extract_to_csv(args)
-    data.to_csv(os.path.join(args.out_path, 'eICU_dataset_formatted.csv'), index=False)
+    data.to_csv(os.path.join(args.root_path, 'format_eICU.csv'), index=False)
 
 
 if __name__ == '__main__':
