@@ -110,8 +110,8 @@ def layout_csv(pid, n_episode, icustay, ts, stay, readmission):
     ts['AdmissionTime'] = admission_time
     ts['DischargeTime'] = discharge_time
     ts['Outcome'] = mortality
-    ts['Readmission'] = readmission
     ts['LOS'] = los - ts['RecordTime'].values
+    ts['Readmission'] = readmission
     ts['Sex'] = sex
     ts['Age'] = age
 
@@ -176,7 +176,6 @@ def extract_to_csv(args, eps=1e-6, decom_future_time_interval=24.0):
                 intime = pd.to_datetime(stay['INTIME'].iloc[0])
 
                 # readmission
-                readmission = 0
                 readmission = 0
                 if n_episode < len(patient_ts_files):
                     outtime = np.datetime64(stay['OUTTIME'].iloc[0])
@@ -261,7 +260,7 @@ def extract_to_csv(args, eps=1e-6, decom_future_time_interval=24.0):
     num_cols = [_ for _ in lab_cols if '->' not in _]
     columns = basic_cols + task_cols + demo_cols + cate_cols + num_cols
     all_patient_ehr = all_patient_ts[columns]
-    all_patient_ehr.to_csv(os.path.join(output_dir, 'format_mimic3.csv'), index=False)
+    all_patient_ehr.to_csv(os.path.join(output_dir, 'format_mimic3_ehr.csv'), index=False)
 
 
 def main():
