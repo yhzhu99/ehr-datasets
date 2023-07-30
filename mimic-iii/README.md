@@ -27,7 +27,7 @@ The code is based on repository [mimic3-benchmark](https://github.com/YerevaNN/m
 |**Length of Stay Prediction**|Predict remaining time spent in ICU at each hour of stay.|
 |**Decompensation prediction**|Predict whether the patient's health will rapidly deteriorate in the next 24 hours.|
 |**Phenotype Classification**|Classify which of 25 acute care conditions are present in a given patient ICU stay record.|
-|**30 Days Readmission**|Predict readmission after discharge after 30 days.|
+|**30 Days Readmission**|Predict readmission after discharge after 30 days. (If a patient dies within 30 days from discharge date, then that visit is also marked as readmission.)|
 
 ## Building the Benchmark
 
