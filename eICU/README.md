@@ -60,7 +60,7 @@ Currently, we support the mortality outcome prediction task and length of stay p
     # Execute with `python -m data_extraction.data_extraction_root /data/datasets/eicu-crd/decompressed  processed/
     ```
 
-3. The following commands will generate formatted EHR csv file, which contains basic information of patiens, lables of prediction tasks and time series data. It will be stored in `data/processed/ehr/eICU_dataset_formatted.csv`.
+3. The following commands will generate formatted EHR csv file, which contains basic information of patiens, lables of prediction tasks and time series data. It will be stored in `data/processed/ehr/format_eICU.csv`.
 
     ```bash
     python -m format_eICU {PATH_TO_eICU_CSVs} processed/
