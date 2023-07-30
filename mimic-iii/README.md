@@ -75,19 +75,20 @@ Here are the required steps to build the benchmark. It assumes that you already 
 |**AdmissionTime**|`INTIME` in raw CSVs.|
 |**DischargeTime**|`OUTTIME` in raw CSVs.|
 
-|***`Prediction Label`***|***`(columns 4-31)`***|
+|***`Prediction Label`***|***`(columns 4-32)`***|
 |:---------------------|:-----------------|
 |**Outcome**|In-hospital Mortality. '1' represents the patient's death within the hospital.|
 |**LOS**|Length of Stay. (hours since `INTIME`)|
-|**Decompensation**|Decompensation prediction. We define the task as mortality prediction in the next 24 hours at each hour of an ICU stay. '1' represents the patient's death.|
+|**Readmission**|30 Days Radmission. (30 days after `OUTTIME`)|
+|**Decompensation**|Decompensation Prediction. We define the task as mortality prediction in the next 24 hours at each hour of an ICU stay. '1' represents the patient's death.|
 |**Phenotype**|Phenotype Classification, multi-label classification task. `['Acute and unspecified renal failure', 'Acute cerebrovascular disease', 'Acute myocardial infarction', 'Cardiac dysrhythmias', 'Chronic kidney disease', 'Chronic obstructive pulmonary disease and bronchiectasis', 'Complications of surgical procedures or medical care', 'Conduction disorders', 'Congestive heart failure; nonhypertensive', 'Coronary atherosclerosis and other heart disease', 'Diabetes mellitus with complications', 'Diabetes mellitus without complication', 'Disorders of lipid metabolism', 'Essential hypertension', 'Fluid and electrolyte disorders', 'Gastrointestinal hemorrhage', 'Hypertension with complications and secondary hypertension', 'Other liver diseases', 'Other lower respiratory disease', 'Other upper respiratory disease', 'Pleurisy; pneumothorax; pulmonary collapse', 'Pneumonia (except that caused by tuberculosis or sexually transmitted disease)', 'Respiratory failure; insufficiency; arrest (adult)', 'Septicemia (except in labor)', 'Shock']`|
 
-|***`Demographics`***|***`(columns 32-33)`***|
+|***`Demographics`***|***`(columns 33-34)`***|
 |:---------------------|:-----------------|
 |**Sex**|Female (0) or Male (1)|
 |**Age**|Age of Patiens.|
 
-|***`Laboratory Features`***|***`(columns 34-92)`***|
+|***`Laboratory Features`***|***`(columns 35-93)`***|
 |:---------------------|:-----------------|
 |**Categorical**|`["Capillary refill rate", "Glascow coma scale eye opening", "Glascow coma scale motor response", "Glascow coma scale total", "Glascow coma scale verbal response"]`|
 |**Numerical**|`["Diastolic blood pressure", "Fraction inspired oxygen", "Glucose", "Heart Rate", "Height", "Mean blood pressure", "Oxygen saturation", "Respiratory rate", "Systolic blood pressure", "Temperature", "Weight", "pH"]`|
