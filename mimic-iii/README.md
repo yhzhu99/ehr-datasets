@@ -27,7 +27,7 @@ The code is based on repository [mimic3-benchmark](https://github.com/YerevaNN/m
 |**Length of Stay Prediction**|Predict remaining time spent in ICU at each hour of stay.|
 |**Decompensation prediction**|Predict whether the patient's health will rapidly deteriorate in the next 24 hours.|
 |**Phenotype Classification**|Classify which of 25 acute care conditions are present in a given patient ICU stay record.|
-|**30 Days Readmission**|Predict readmission after discharge after 30 days. (If a patient dies within 30 days from discharge date, then that visit is also marked as readmission.)|
+|**30 Days Readmission**|Predict readmission after 30 days since discharge. (If a patient dies within 30 days from discharge date, then that visit is also marked as readmission.)|
 
 ## Building the Benchmark
 
@@ -80,7 +80,7 @@ Here are the required steps to build the benchmark. It assumes that you already 
 |**Outcome**|In-hospital Mortality. '1' represents the patient's death within the hospital.|
 |**LOS**|Length of Stay. (hours since `INTIME`)|
 |**Decompensation**|Decompensation prediction. We define the task as mortality prediction in the next 24 hours at each hour of an ICU stay. '1' represents the patient's death.|
-|**Phenotype**|Phenotype Classification. The specific 25 conditions can be found in `mimic3benchmark/resources/hcup_ccs_2015_definitions.yaml`. |
+|**Phenotype**|Phenotype Classification, multi-label classification task. `['Acute and unspecified renal failure', 'Acute cerebrovascular disease', 'Acute myocardial infarction', 'Cardiac dysrhythmias', 'Chronic kidney disease', 'Chronic obstructive pulmonary disease and bronchiectasis', 'Complications of surgical procedures or medical care', 'Conduction disorders', 'Congestive heart failure; nonhypertensive', 'Coronary atherosclerosis and other heart disease', 'Diabetes mellitus with complications', 'Diabetes mellitus without complication', 'Disorders of lipid metabolism', 'Essential hypertension', 'Fluid and electrolyte disorders', 'Gastrointestinal hemorrhage', 'Hypertension with complications and secondary hypertension', 'Other liver diseases', 'Other lower respiratory disease', 'Other upper respiratory disease', 'Pleurisy; pneumothorax; pulmonary collapse', 'Pneumonia (except that caused by tuberculosis or sexually transmitted disease)', 'Respiratory failure; insufficiency; arrest (adult)', 'Septicemia (except in labor)', 'Shock']`|
 
 |***`Demographics`***|***`(columns 32-33)`***|
 |:---------------------|:-----------------|

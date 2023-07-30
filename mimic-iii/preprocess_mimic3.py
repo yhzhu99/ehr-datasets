@@ -9,7 +9,7 @@ import math
 
 
 class TSDiscretizer:
-    def __init__(self, timestep=1.0, config_path=os.path.join(os.path.dirname(__file__), 'mimic3models/resources/discretizer_config.json')):
+    def __init__(self, timestep=1.0, config_path=os.path.join(os.path.dirname(__file__), 'resources/discretizer_config.json')):
         with open(config_path) as f:
             config = json.load(f)
             self._id_to_channel = config['id_to_channel']
@@ -183,7 +183,7 @@ def extract_to_csv(args, eps=1e-6, decom_future_time_interval=24.0):
                     readmit_intime = np.datetime64(stay_df.loc[n_episode, 'INTIME'])
                     if (readmit_intime - outtime).astype('timedelta64[D]') <= np.timedelta64(30, 'D'):
                         readmission = 1
-                elif n_episode == len(patient_ts_files) and mortality == 1:
+                elif n_episode == len(patient_ts_files) and pd.notnull(deathtime):
                     outtime = np.datetime64(stay['OUTTIME'].iloc[0])
                     deadtime = np.datetime64(stay['DEATHTIME'].iloc[0])
                     if (deadtime - outtime).astype('timedelta64[D]') <= np.timedelta64(30, 'D'):
