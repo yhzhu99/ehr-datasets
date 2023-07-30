@@ -94,7 +94,7 @@ class TSDiscretizer:
         return ts_df, new_header
 
 
-def layout_csv(pid, n_episode, icustay, ts, stay):
+def layout_csv(pid, n_episode, icustay, ts, stay, readmission):
     admission_time = stay[stay['ICUSTAY_ID'] == icustay]['INTIME'].values[0]
     discharge_time = stay[stay['ICUSTAY_ID'] == icustay]['OUTTIME'].values[0]
     mortality = stay[stay['ICUSTAY_ID'] == icustay]['MORTALITY_INHOSPITAL'].values[0]
@@ -110,6 +110,7 @@ def layout_csv(pid, n_episode, icustay, ts, stay):
     ts['AdmissionTime'] = admission_time
     ts['DischargeTime'] = discharge_time
     ts['Outcome'] = mortality
+    ts['Readmission'] = readmission
     ts['LOS'] = los - ts['RecordTime'].values
     ts['Sex'] = sex
     ts['Age'] = age
@@ -150,12 +151,13 @@ def extract_to_csv(args, eps=1e-6, decom_future_time_interval=24.0):
     for patient in tqdm(patients, desc='Iterating over patients'):
         patient_folder = os.path.join(args.root_path, patient)
         patient_ts_files = list(filter(lambda x: x.find("timeseries") != -1, os.listdir(patient_folder)))
+        patient_ts_files = sorted(patient_ts_files, key=lambda x: int(x.split('_')[0].split('episode')[-1]))
         stay_df = pd.read_csv(os.path.join(patient_folder, "stays.csv"))
-        
+
         for ts_filename in patient_ts_files:
             with open(os.path.join(patient_folder, ts_filename)) as tsfile:
                 lb_filename = ts_filename.replace("_timeseries", "")
-                n_episode = lb_filename.split('.')[0][-1]
+                n_episode = int(lb_filename.split('.')[0].split('episode')[-1])
                 label_df = pd.read_csv(os.path.join(patient_folder, lb_filename))
                 
                 # empty label file
@@ -172,6 +174,15 @@ def extract_to_csv(args, eps=1e-6, decom_future_time_interval=24.0):
                 stay = stay_df[stay_df.ICUSTAY_ID == icustay]
                 deathtime = pd.to_datetime(stay['DEATHTIME'].iloc[0])
                 intime = pd.to_datetime(stay['INTIME'].iloc[0])
+
+                # readmission
+                readmission = 0
+                if n_episode < len(patient_ts_files):
+                    outtime = np.datetime64(stay['OUTTIME'].iloc[0])
+                    readmit_intime = np.datetime64(stay_df.loc[n_episode, 'INTIME'])
+                    if (readmit_intime - outtime).astype('timedelta64[D]') <= np.timedelta64(30, 'D'):
+                        readmission = 1
+
                 if pd.isnull(deathtime):
                     lived_time = 1e18
                 else:
@@ -200,7 +211,7 @@ def extract_to_csv(args, eps=1e-6, decom_future_time_interval=24.0):
                 discretizer = TSDiscretizer()
                 ts_df, new_header = discretizer.preprocess(ts_df)
 
-                out_df = layout_csv(patient, n_episode, icustay, ts_df, stay_df)
+                out_df = layout_csv(patient, n_episode, icustay, ts_df, stay_df, readmission)
 
                 # decompensation
                 sample_times = np.arange(0.0, min(los, lived_time) + eps)
@@ -232,21 +243,19 @@ def extract_to_csv(args, eps=1e-6, decom_future_time_interval=24.0):
 
                 # merge four tasks data
                 out_df = pd.merge(out_df, decom_df, how='left', on=['PatientID', 'RecordTime'])
-                out_df.loc[:, phneo_cols] = cur_labels
+                out_df[phneo_cols] = cur_labels
                 all_patient_ts = pd.concat([all_patient_ts, out_df], ignore_index=True)
                 
     # format the csv file
     basic_cols = ['PatientID', 'RecordTime', 'AdmissionTime', 'DischargeTime']
-    task_cols = ['Outcome', 'LOS', 'Decompensation'] + phneo_cols
+    task_cols = ['Outcome', 'LOS', 'Readmission', 'Decompensation'] + phneo_cols
     demo_cols = ['Sex', 'Age']
-    # lab_cols = all_patient_ts.columns[len(demo_cols):]
     lab_cols = new_header
     cate_cols = [_ for _ in lab_cols if '->' in _]
     num_cols = [_ for _ in lab_cols if '->' not in _]
     columns = basic_cols + task_cols + demo_cols + cate_cols + num_cols
     all_patient_ehr = all_patient_ts[columns]
-    
-    return all_patient_ehr
+    all_patient_ehr.to_csv(os.path.join(output_dir, 'format_mimic3.csv'), index=False)
 
 
 def main():
@@ -261,8 +270,8 @@ def main():
     if not os.path.exists(args.output_path):
         os.makedirs(args.output_path)
 
-    data = extract_to_csv(args)
-    data.to_csv(os.path.join(args.output_path, 'mimic3_ehr_dataset_formatted.csv'), index=False)
+    extract_to_csv(args)
+
 
 if __name__ == '__main__':
     main()

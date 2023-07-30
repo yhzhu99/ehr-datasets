@@ -27,6 +27,7 @@ The code is based on repository [mimic3-benchmark](https://github.com/YerevaNN/m
 |**Length of Stay Prediction**|Predict remaining time spent in ICU at each hour of stay.|
 |**Decompensation prediction**|Predict whether the patient's health will rapidly deteriorate in the next 24 hours.|
 |**Phenotype Classification**|Classify which of 25 acute care conditions are present in a given patient ICU stay record.|
+|**30 Days Readmission**|Predict readmission after discharge after 30 days.|
 
 ## Building the Benchmark
 
@@ -50,7 +51,7 @@ Here are the required steps to build the benchmark. It assumes that you already 
 
        python -m mimic3benchmark.scripts.extract_episodes_from_subjects data/root/
 	
-5. The following commands will generate formatted EHR csv file, which contains basic information of patiens, lables of prediction tasks and time series data. It will be stored in `data/processed/ehr/mimic3_ehr_dataset_formatted.csv`.
+5. The following commands will generate formatted EHR csv file, which contains basic information of patiens, lables of prediction tasks and time series data. It will be stored in `data/processed/ehr/format_mimic3_ehr.csv`.
 
        python -m preprocess_mimic3 data/root/ data/processed/ehr/
 
@@ -73,14 +74,20 @@ Here are the required steps to build the benchmark. It assumes that you already 
 |**RecordTime**|Relative time of the record since `INTIME`. (hours since admit)|
 |**AdmissionTime**|`INTIME` in raw CSVs.|
 |**DischargeTime**|`OUTTIME` in raw CSVs.|
+
 |***`Prediction Label`***|***`(columns 4-31)`***|
+|:---------------------|:-----------------|
 |**Outcome**|In-hospital Mortality. '1' represents the patient's death within the hospital.|
 |**LOS**|Length of Stay. (hours since `INTIME`)|
 |**Decompensation**|Decompensation prediction. We define the task as mortality prediction in the next 24 hours at each hour of an ICU stay. '1' represents the patient's death.|
 |**Phenotype**|Phenotype Classification. The specific 25 conditions can be found in `mimic3benchmark/resources/hcup_ccs_2015_definitions.yaml`. |
+
 |***`Demographics`***|***`(columns 32-33)`***|
+|:---------------------|:-----------------|
 |**Sex**|Female (0) or Male (1)|
 |**Age**|Age of Patiens.|
+
 |***`Laboratory Features`***|***`(columns 34-92)`***|
+|:---------------------|:-----------------|
 |**Categorical**|["Capillary refill rate" (cols 34-35),<br>&nbsp;"Glascow coma scale eye opening" (cols 36-43),<br>&nbsp;"Glascow coma scale motor response" (cols 44-55),<br>&nbsp;"Glascow coma scale total" (cols 56-68),<br>&nbsp;"Glascow coma scale verbal response" (cols 69-80)]|
 |**Numerical**|(cols 81-92)<br>["Diastolic blood pressure",<br>&nbsp;"Fraction inspired oxygen",<br>&nbsp;"Glucose",<br>&nbsp;"Heart Rate",<br>&nbsp;"Height",<br>&nbsp;"Mean blood pressure",<br>&nbsp;"Oxygen saturation",<br>&nbsp;"Respiratory rate",<br>&nbsp;"Systolic blood pressure",<br>&nbsp;"Temperature",<br>&nbsp;"Weight",<br>&nbsp;"pH"]|
