@@ -287,7 +287,7 @@ def break_up_stays_by_unit_stay_nc(nursecharting, output_path, stayid=None, verb
 # Write the time-series data into one csv for each patient
 def extract_time_series_from_subject(t_path):
     print("Convert to time series ...")
-    print("This will take some hours, as the imputation and binning and converting time series are done here ...")
+    print("This will take some hours, as the binning and converting time series are done here ...")
 
     filter_15_200 = 0
 

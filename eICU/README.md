@@ -49,21 +49,22 @@ Currently, we support the mortality outcome prediction task and length of stay p
 
     ```bash
     cd eICU/
-    mkdir processed
+    mkdir processing # save intermediate files
+    mkdir processed # save pickle format dataset files
     ```
 
 2. The following command generates one directory per each patient and writes patients demographics into `pats.csv`, the items extracted from Nursecharting into `nc.csv` and the lab items into `lab.csv` and then converts these three csv files into one `timeseries.csv` for each patient. you will have one csv file `all_data.csv` with all the patients data in a time-series manner for all the four tasks.
 
     ```bash
-    python -m data_extraction.data_extraction_root {PATH_TO_eICU_CSVs} processed/
+    python -m data_extraction.data_extraction_root {PATH_TO_eICU_CSVs} processing/
     # For example, the decompressed datasets are saved in `/data/datasets/eicu-crd/decompressed/`,
-    # Execute with `python -m data_extraction.data_extraction_root /data/datasets/eicu-crd/decompressed  processed/
+    # Execute with `python -m data_extraction.data_extraction_root /data/datasets/eicu-crd/decompressed  processing/
     ```
 
-3. The following commands will generate formatted EHR csv file, which contains basic information of patiens, lables of prediction tasks and time series data. It will be stored in `data/processed/ehr/eICU_dataset_formatted.csv`.
+3. The following commands will generate formatted EHR csv file, which contains basic information of patiens, labels of prediction tasks and time series EHR data. It will be stored in `data/processed/eICU_dataset_formatted.csv`.
 
     ```bash
-    python -m format_eICU {PATH_TO_eICU_CSVs} processed/
+    python -m format_eICU {PATH_TO_eICU_CSVs} processing/ processed/
     ```
 
 ## Formatted CSV File Description
