@@ -437,20 +437,20 @@ def all_df_into_one_df(output_path):
 
 # Convert categorical variables into number from 0 to 429
 def prepare_categorical_variables(root_dir):
-    columns_ord = [ 'patientunitstayid', 'itemoffset',
-                    'Eyes', 'Motor', 'GCS Total', 'Verbal',
-                    'ethnicity', 'gender', 'apacheadmissiondx',
-                    'FiO2', 'Heart Rate', 'Invasive BP Diastolic',
-                    'Invasive BP Systolic', 'MAP (mmHg)',  'O2 Saturation',
-                    'Respiratory Rate', 'Temperature (C)', 'admissionheight',
-                    'admissionweight', 'age', 'glucose', 'pH',
-                    'hospitaladmitoffset',
-                    'hospitaldischargestatus', 'unitdischargeoffset',
-                    'unitdischargestatus']
+    columns_ord = ['patientunitstayid', 'itemoffset',
+                   'Eyes', 'Motor', 'GCS Total', 'Verbal',
+                   'ethnicity', 'gender', 'apacheadmissiondx',
+                   'FiO2', 'Heart Rate', 'Invasive BP Diastolic',
+                   'Invasive BP Systolic', 'MAP (mmHg)',  'O2 Saturation',
+                   'Respiratory Rate', 'Temperature (C)', 'admissionheight',
+                   'admissionweight', 'age', 'glucose', 'pH',
+                   'hospitaladmitoffset',
+                   'hospitaldischargestatus', 'unitdischargeoffset',
+                   'unitdischargestatus']
     all_df = pd.read_csv(os.path.join(root_dir, 'all_data.csv'))
   
-    all_df = all_df[all_df.gender != 0] #unknown gender is dropped
-    all_df = all_df[all_df.hospitaldischargestatus != 2] #unknown hospital discharge is dropped
+    all_df = all_df[all_df.gender != 2]  # unknown gender is dropped
+    all_df = all_df[all_df.hospitaldischargestatus != 2]  # unknown hospital discharge is dropped
     all_df = all_df[columns_ord]
 
     # all_df.apacheadmissiondx = all_df.apacheadmissiondx.astype(int)
@@ -491,8 +491,6 @@ def prepare_categorical_variables(root_dir):
     index = all_df["Verbal"][all_df["Verbal"].notna()].index
     value = all_df["Verbal"][all_df["Verbal"].notna()].values
     all_df.loc[index, "Verbal"] = value.astype(int)
-    all_df.ethnicity = all_df.ethnicity
-    all_df.gender = all_df.gender
     all_df['GCS Total'] = all_df['GCS Total']
     all_df['Eyes'] = all_df['Eyes']
     all_df['Motor'] = all_df['Motor']
@@ -943,7 +941,7 @@ def filter_out_data(all_df):
     # import pdb;pdb.set_trace()
 
     all_df = all_df[all_df.gender != 2]
-    all_df = all_df[all_df.hospitaldischargestatus!=2]
+    all_df = all_df[all_df.hospitaldischargestatus != 2]
     all_df['RLOS'] = np.nan
     all_df['unitdischargeoffset'] = all_df['unitdischargeoffset'] / (1440)
     all_df['itemoffsetday'] = (all_df['itemoffset'] / 24)
@@ -958,7 +956,7 @@ def filter_out_data(all_df):
     all_out = all_out[all_out['itemoffset'] > 0]
     all_out = all_out[(all_out['unitdischargeoffset'] > 0) & (all_out['RLOS'] > 0)]
     # all_los = all_los.round({'RLOS': 2})
-    all_out = all_out[all_df["unitdischargestatus"] != 2]
+    all_out = all_out[all_out["unitdischargestatus"] != 2]
 
     all_out = label_decompensation(all_out)
 

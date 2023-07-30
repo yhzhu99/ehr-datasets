@@ -11,7 +11,7 @@ The code is based on repository [eICU_Benchmark](https://github.com/mostafaalish
 
 |***`Number of patients`***|
 |:------------------:|
-|74336|
+|73386|
 
 ### Data Modalities
 
