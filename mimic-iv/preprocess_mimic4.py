@@ -9,7 +9,7 @@ import math
 
 
 class TSDiscretizer:
-    def __init__(self, timestep=1.0, config_path=os.path.join(os.path.dirname(__file__), 'mimic3models/resources/discretizer_config.json')):
+    def __init__(self, timestep=1.0, config_path=os.path.join(os.path.dirname(__file__), 'resources/discretizer_config.json')):
         with open(config_path) as f:
             config = json.load(f)
             self._id_to_channel = config['id_to_channel']
