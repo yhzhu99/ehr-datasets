@@ -137,6 +137,6 @@ def normalize_dataframe(train_df, val_df, test_df, normalize_features):
 
 
 def normalize_df_with_statistics(df, normalize_features, train_mean, train_std):
-    df[normalize_features] = (df[normalize_features] - train_mean) / (train_std+1e-12)
+    df.loc[:, normalize_features] = (df.loc[:, normalize_features] - train_mean) / (train_std+1e-12)
     df.loc[:, normalize_features] = df.loc[:, normalize_features].applymap(filter_outlier)
     return df
