@@ -249,3 +249,23 @@ def export_missing_mask_pipeline(
         local_missing_mask_value.append(cur_patient_missing_mask_value)
 
     return all_missing_mask_string, local_missing_mask_value
+
+def get_time_interval_term(all_missing_mask_string):
+    """
+    get the time interval term
+    """
+    td = []
+    for pid in range(len(all_missing_mask_string)):
+        cur_td = []
+        for visit_id in range(len(all_missing_mask_string[pid][0])):
+            cur_feat = []
+            for feature_id in range(len(all_missing_mask_string[pid])):
+                if all_missing_mask_string[pid][feature_id][visit_id] == 'D':
+                    cur_feat.append(np.inf)
+                elif all_missing_mask_string[pid][feature_id][visit_id] == 'E':
+                    cur_feat.append(0)
+                else:
+                    cur_feat.append(all_missing_mask_string[pid][feature_id][visit_id])
+            cur_td.append(cur_feat)
+        td.append(cur_td)
+    return td
