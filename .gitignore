@@ -19,6 +19,8 @@ cdsl/processed_sample
 tjh/processed_missing
 tjh/processed_sample
 format_*.csv
+mimic-iii/processed/
+mimic-iv/processed/
 #####################
 
 
