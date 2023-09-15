@@ -21,6 +21,8 @@ tjh/processed_sample
 format_*.csv
 mimic-iii/processed/
 mimic-iv/processed/
+mimic-iii/processed_missing/
+mimic-iv/processed_missing/
 #####################
 
 
