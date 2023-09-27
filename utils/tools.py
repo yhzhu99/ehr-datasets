@@ -129,16 +129,16 @@ def normalize_dataframe(train_df, val_df, test_df, normalize_features):
     val_df.loc[:, normalize_features] = (val_df.loc[:, normalize_features] - train_mean) / (train_std+1e-12)
     test_df.loc[:, normalize_features] = (test_df.loc[:, normalize_features] - train_mean) / (train_std+1e-12)
 
-    train_df.loc[:, normalize_features] = train_df.loc[:, normalize_features].applymap(filter_outlier)
-    val_df.loc[:, normalize_features] = val_df.loc[:, normalize_features].applymap(filter_outlier)
-    test_df.loc[:, normalize_features] = test_df.loc[:, normalize_features].applymap(filter_outlier)
+    train_df.loc[:, normalize_features] = train_df.loc[:, normalize_features].map(filter_outlier)
+    val_df.loc[:, normalize_features] = val_df.loc[:, normalize_features].map(filter_outlier)
+    test_df.loc[:, normalize_features] = test_df.loc[:, normalize_features].map(filter_outlier)
 
     return train_df, val_df, test_df, default_fill, los_info, train_mean, train_std
 
 
 def normalize_df_with_statistics(df, normalize_features, train_mean, train_std):
     df.loc[:, normalize_features] = (df.loc[:, normalize_features] - train_mean) / (train_std+1e-12)
-    df.loc[:, normalize_features] = df.loc[:, normalize_features].applymap(filter_outlier)
+    df.loc[:, normalize_features] = df.loc[:, normalize_features].map(filter_outlier)
     return df
 
 
