@@ -129,16 +129,16 @@ def normalize_dataframe(train_df, val_df, test_df, normalize_features):
     val_df.loc[:, normalize_features] = (val_df.loc[:, normalize_features] - train_mean) / (train_std+1e-12)
     test_df.loc[:, normalize_features] = (test_df.loc[:, normalize_features] - train_mean) / (train_std+1e-12)
 
-    train_df.loc[:, normalize_features] = train_df.loc[:, normalize_features].applymap(filter_outlier)
-    val_df.loc[:, normalize_features] = val_df.loc[:, normalize_features].applymap(filter_outlier)
-    test_df.loc[:, normalize_features] = test_df.loc[:, normalize_features].applymap(filter_outlier)
+    train_df.loc[:, normalize_features] = train_df.loc[:, normalize_features].map(filter_outlier)
+    val_df.loc[:, normalize_features] = val_df.loc[:, normalize_features].map(filter_outlier)
+    test_df.loc[:, normalize_features] = test_df.loc[:, normalize_features].map(filter_outlier)
 
     return train_df, val_df, test_df, default_fill, los_info, train_mean, train_std
 
 
 def normalize_df_with_statistics(df, normalize_features, train_mean, train_std):
     df.loc[:, normalize_features] = (df.loc[:, normalize_features] - train_mean) / (train_std+1e-12)
-    df.loc[:, normalize_features] = df.loc[:, normalize_features].applymap(filter_outlier)
+    df.loc[:, normalize_features] = df.loc[:, normalize_features].map(filter_outlier)
     return df
 
 
@@ -154,6 +154,24 @@ def calculate_missing_rate(df, features):
         missing_rate = float(df[e].isna().sum()/df[e].shape[0])
         statistics[e]['missing_rate'] = missing_rate
     return statistics
+
+def calculate_time_difference(time1, time2):
+    def parse_time(time_str):
+        hours, minutes = map(int, time_str.split(':'))
+        return hours, minutes
+    
+    hours1, minutes1 = parse_time(time1)
+    hours2, minutes2 = parse_time(time2)
+    
+    # Calculate the time difference in minutes
+    total_minutes1 = hours1 * 60 + minutes1
+    total_minutes2 = hours2 * 60 + minutes2
+    delta_minutes = total_minutes1 - total_minutes2
+    
+    # Convert minutes to fractional days
+    delta_days = delta_minutes / (24 * 60)
+    
+    return delta_days
 
 def export_missing_mask_string(data, time):
     missing_mask_string = []
@@ -192,6 +210,10 @@ def export_missing_mask_string(data, time):
                 missing_mask_string.append(float((time[i] - time[not_na_time_pos]))/24)
             else:
                 missing_mask_string.append(float((pd.to_datetime(time[i]) - pd.to_datetime(time[not_na_time_pos])).days))
+                ###########
+                # For challenge2012 dataset
+                ###########
+                # missing_mask_string.append(calculate_time_difference(time[i], time[not_na_time_pos]))
         else:
             missing_mask_string.append('E')
             not_na_time_pos = i
